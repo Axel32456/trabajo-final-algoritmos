@@ -33,7 +33,7 @@ namespace tpfinal
 		public String Consulta2(List<string> datos)
 		{
 			string result = "Implementar";
-            
+
             return result;
         }
 
@@ -68,12 +68,11 @@ namespace tpfinal
             foreach (KeyValuePair<string, int> par in diccionario)
             {
                 Dato dato = new Dato(par.Value, par.Key);
-
                 lista.Add(dato);
             }
 
             Ordenamiento(lista);
-            
+
             for (int i = 0; i < cantidad && i < lista.Count; i++)
             {
                 collected.Add(lista[i]);
@@ -99,24 +98,24 @@ namespace tpfinal
             }
 
             Dato[] heap = new Dato[diccionario.Count];
-            int size = 0;
+            int tamaño = 0;
 
             foreach (KeyValuePair<string, int> par in diccionario)
             {
                 Dato dato = new Dato(par.Value, par.Key);
-                heap[size] = dato;
-                FiltrarArriba(heap, size);
-                size++;
+                heap[tamaño] = dato;
+                FiltrarArriba(heap, tamaño);
+                tamaño++;
             }
 
             int contador = 0;
 
-            while (contador < cantidad && size > 0)
+            while (contador < cantidad && tamaño > 0)
             {
                 collected.Add(heap[0]);
-                heap[0] = heap[size - 1];
-                size--;
-                FiltrarAbajo(heap, 0, size);
+                heap[0] = heap[tamaño - 1];
+                tamaño--;
+                FiltrarAbajo(heap, 0, tamaño);
                 contador++;
             }
         }
