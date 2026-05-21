@@ -134,7 +134,7 @@ namespace tpfinal
         }
 
 
-        private void FiltrarAbajo(Dato[] heap, int i, int size)
+        private void FiltrarAbajo(Dato[] heap, int i, int tamaño)
         {
             while (true)
             {
@@ -142,12 +142,12 @@ namespace tpfinal
                 int der = 2 * i + 2;
                 int mayor = i;
 
-                if (izq < size && heap[izq].ocurrencia > heap[mayor].ocurrencia)
+                if (izq < tamaño && heap[izq].ocurrencia > heap[mayor].ocurrencia)
                 {
                     mayor = izq;
                 }
 
-                if (der < size && heap[der].ocurrencia > heap[mayor].ocurrencia)
+                if (der < tamaño && heap[der].ocurrencia > heap[mayor].ocurrencia)
                 {
                     mayor = der;
                 }
