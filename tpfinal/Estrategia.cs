@@ -8,10 +8,8 @@ using tp1;
 
 namespace tpfinal
 {
-
 	public class Estrategia
 	{
-	
 		public String Consulta1(List<string> datos)
 		{
             List<Dato> resultados = new List<Dato>();
@@ -28,10 +26,9 @@ namespace tpfinal
             cronometro.Stop();
             long tiempo2 = cronometro.ElapsedMilliseconds;
 
-			string result = "Tiempo con Heap: "+tiempo1+ "ms  :  "+"Tiempo con otro: "+tiempo2+ "ms";
+            string result = "Tiempo con Heap: " + tiempo1 + " ms   |   " + "Tiempo con Ordenamiento: " + tiempo2 + " ms";
             return result;
 		}
-
 
 		public String Consulta2(List<string> datos)
 		{
@@ -39,8 +36,6 @@ namespace tpfinal
             
             return result;
         }
-
-		
 
 		public String Consulta3(List<string> datos)
 		{
@@ -53,15 +48,14 @@ namespace tpfinal
         public void BuscarConOtro(List<string> datos, int cantidad, List<Dato> collected)
         {
             collected.Clear();
-
             Dictionary<string, int> diccionario = new Dictionary<string, int>();
 
-            foreach(string d in datos)
+            foreach (string d in datos)
             {
-                if(diccionario.ContainsKey(d))
+                if (diccionario.ContainsKey(d))
                 {
-                    diccionario[d] += 1; 
-                } 
+                    diccionario[d]++;
+                }
 
                 else
                 {
@@ -71,15 +65,16 @@ namespace tpfinal
 
             List<Dato> lista = new List<Dato>();
 
-            foreach(KeyValuePair<string, int> par in diccionario)
+            foreach (KeyValuePair<string, int> par in diccionario)
             {
                 Dato dato = new Dato(par.Value, par.Key);
+
                 lista.Add(dato);
             }
 
             Ordenamiento(lista);
-
-            for(int i = 0; i < cantidad && i < lista.Count; i++)
+            
+            for (int i = 0; i < cantidad && i < lista.Count; i++)
             {
                 collected.Add(lista[i]);
             }
@@ -89,106 +84,80 @@ namespace tpfinal
         public void BuscarConHeap(List<string> datos, int cantidad, List<Dato> collected)
         {
             collected.Clear();
-
             Dictionary<string, int> diccionario = new Dictionary<string, int>();
-
             foreach (string d in datos)
             {
                 if (diccionario.ContainsKey(d))
                 {
-                    diccionario[d] += 1;
+                    diccionario[d]++;
                 }
-                
+
                 else
                 {
                     diccionario[d] = 1;
                 }
             }
-            
-            List<Dato> heap = new List<Dato>();
 
-            foreach(KeyValuePair<string, int> par in diccionario)
+            Dato[] heap = new Dato[diccionario.Count];
+            int size = 0;
+
+            foreach (KeyValuePair<string, int> par in diccionario)
             {
                 Dato dato = new Dato(par.Value, par.Key);
-
-                heap.Add(dato);
-
-                FiltrarArriba(heap, heap.Count - 1);
+                heap[size] = dato;
+                FiltrarArriba(heap, size);
+                size++;
             }
 
             int contador = 0;
 
-            while(contador < cantidad && heap.Count > 0)
+            while (contador < cantidad && size > 0)
             {
                 collected.Add(heap[0]);
-
-                Dato ultimo = heap[heap.Count - 1];
-
-                heap[0] = ultimo;
-
-                heap.RemoveAt(heap.Count - 1);
-
-                FiltrarAbajo(heap, 0);
-
+                heap[0] = heap[size - 1];
+                size--;
+                FiltrarAbajo(heap, 0, size);
                 contador++;
             }
         }
 
-
-
-        private void FiltrarArriba(List<Dato> heap, int i)
+        private void FiltrarArriba(Dato[] heap, int i)
         {
-            int p = (i - 1) / 2;
-
-            while (i > 0 && heap[i].ocurrencia > heap[p].ocurrencia)
+            int padre = (i - 1) / 2;
+            while (i > 0 && heap[i].ocurrencia > heap[padre].ocurrencia)
             {
                 Dato temp = heap[i];
-
-                heap[i] = heap[p];
-
-                heap[p] = temp;
-
-                i = p;
-
-                p = (i - 1) / 2;
+                heap[i] = heap[padre];
+                heap[padre] = temp;
+                i = padre;
+                padre = (i - 1) / 2;
             }
         }
 
 
-        private void FiltrarAbajo(List<Dato> heap, int i)
+        private void FiltrarAbajo(Dato[] heap, int i, int size)
         {
-            int mayor = i;
-
-            int izq = 2 * i + 1;
-
-            int der = 2 * i + 2;
-
-            while(izq < heap.Count)
+            while (true)
             {
-                izq = 2 * i + 1;
+                int izq = 2 * i + 1;
+                int der = 2 * i + 2;
+                int mayor = i;
 
-                der = 2 * i + 2;
-
-                mayor = i;
-
-                if(izq < heap.Count && heap[izq].ocurrencia > heap[mayor].ocurrencia)
+                if (izq < size && heap[izq].ocurrencia > heap[mayor].ocurrencia)
                 {
                     mayor = izq;
                 }
 
-                if(der < heap.Count && heap[der].ocurrencia > heap[mayor].ocurrencia)
+                if (der < size && heap[der].ocurrencia > heap[mayor].ocurrencia)
                 {
                     mayor = der;
                 }
 
-                if(mayor != i)
+                if (mayor != i)
                 {
                     Dato temp = heap[i];
-
                     heap[i] = heap[mayor];
-
                     heap[mayor] = temp;
-
                     i = mayor;
                 }
 
@@ -200,20 +169,17 @@ namespace tpfinal
         }
 
 
-        private void Ordenamiento (List<Dato> lista)
+        private void Ordenamiento(List<Dato> lista)
         {
             int n = lista.Count;
-
-            for(int i = 0; i < (n - 1); i++)
+            for (int i = 0; i < n - 1; i++)
             {
-                for(int j = i + 1; j < n; j++)
+                for (int j = i + 1; j < n; j++)
                 {
-                    if(lista[i].ocurrencia < lista[j].ocurrencia)
+                    if (lista[i].ocurrencia < lista[j].ocurrencia)
                     {
                         Dato swap = lista[i];
-
                         lista[i] = lista[j];
-
                         lista[j] = swap;
                     }
                 }
