@@ -32,7 +32,60 @@ namespace tpfinal
 
 		public String Consulta2(List<string> datos)
 		{
-			string result = "Implementar";
+
+            Dictionary<string, int> diccionario = new Dictionary<string, int>();
+
+            foreach (string d in datos)
+            {
+                if (diccionario.ContainsKey(d))
+                {
+                    diccionario[d]++;   
+                }
+                
+                else
+                {
+                    diccionario[d] = 1;
+                }
+                
+            }
+
+            Dato[] heap = new Dato[diccionario.Count];
+            int tamaño = 0;
+
+            foreach (KeyValuePair<string, int> par in diccionario)
+            {
+                Dato dato = new Dato(par.Value, par.Key);
+                heap[tamaño] = dato;
+                FiltrarArriba(heap, tamaño);
+                tamaño++;
+
+            }
+
+            string camino = "";
+            int indice = 0;
+
+            while (true)
+            {
+                camino += heap[indice].ToString();
+
+                int hijoIzq = 2 * indice + 1;
+
+                if (hijoIzq < tamaño)
+                {
+                    camino += Environment.NewLine;
+                    camino += "↓";
+                    camino += Environment.NewLine;
+
+                    indice = hijoIzq;
+            }
+            else
+            {
+                break;
+            }
+}
+
+            string result = "Camino a la hoja más izquierda de la Heap: " + 
+            camino;
 
             return result;
         }
