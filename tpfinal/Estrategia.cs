@@ -92,11 +92,45 @@ namespace tpfinal
 
 		public String Consulta3(List<string> datos)
 		{
-			string result = "Implementar";
+            //Creacion y carga del diccionario.
+            Dictionary<string, int> diccionario = new Dictionary<string, int>();
+            foreach (string d in datos)
+            {
+                if (diccionario.ContainsKey(d))
+                    diccionario[d]++;
+                else
+                    diccionario[d] = 1;
+            }
+            // Construccion del Max-Heap.
+            Dato[] heap = new Dato[diccionario.Count];
+            int tamaño = 0;
+            foreach (KeyValuePair<string, int> par in diccionario)
+            {
+                Dato dato = new Dato(par.Value, par.Key);
+                heap[tamaño] = dato;
+                FiltrarArriba(heap, tamaño);
+                tamaño++;
+            }
+            // Recorrido del heap por lvl. Cada lvl tiene el doble de nodos que el anterior.
+            string result = "";
+            int nivel = 0;
+            int capActual = 1;
+            int contador = 0;
 
+            for (int i = 0; i < tamaño; i++)
+            {
+                result += "Nivel " + nivel + ": " + heap[i].ToString()+ "\n"; 
+                contador++;
+                //Al completar los nodos del lvl actual, avanza al sig.
+                if (contador == capActual)
+                {
+                    nivel++;
+                    capActual *= 2;
+                    contador = 0;
+                }
+            } 
             return result;
 		}
-
 
         public void BuscarConOtro(List<string> datos, int cantidad, List<Dato> collected)
         {
