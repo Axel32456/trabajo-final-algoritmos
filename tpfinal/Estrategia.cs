@@ -77,12 +77,12 @@ namespace tpfinal
                     camino += Environment.NewLine;
 
                     indice = hijoIzq;
+                }
+                else
+                {
+                  break;
+                }
             }
-            else
-            {
-                break;
-            }
-}
 
             string result = "Camino a la hoja más izquierda de la Heap: " + 
             camino;
